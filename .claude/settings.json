@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose *)",
+      "Bash(uv run *)",
+      "Bash(npm run *)",
+      "Bash(npm test*)",
+      "Bash(npx oxlint*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Bash(git push*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/post_edit_lint.py\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop_checks.py\"",
+            "timeout": 180
+          }
+        ]
+      }
+    ]
+  }
+}

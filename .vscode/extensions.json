@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "bierner.markdown-mermaid",
+    "charliermarsh.ruff",
+    "ms-python.python",
+    "oxc.oxc-vscode"
+  ]
+}
