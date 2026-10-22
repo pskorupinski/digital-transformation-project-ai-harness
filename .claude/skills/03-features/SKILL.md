@@ -89,4 +89,6 @@ Status values: `proposed → specified → built` (later steps update it).
 ## Chat summary (≤ 10 lines)
 
 Counts per Kano class and per proposed scope · the `?` the human must resolve · the validation
-questions · assumptions added to §10. Then stop — do not start architecture.
+questions · assumptions added to §10. If more than 6 features are `v1?`, say so and name the
+ones that could merge or wait — a smaller v1 keeps the architecture reviewable.
+Then stop — do not start architecture.

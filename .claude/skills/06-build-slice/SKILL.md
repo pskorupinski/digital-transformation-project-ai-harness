@@ -65,6 +65,8 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
   the spec is the contract.
 - If a step grows beyond the plan (new entity, new endpoint, new dependency), stop and re-plan.
 - Only pre-approved dependencies (see `CLAUDE.md`); anything else → ask.
+- Time-dependent rules read "now/today" from an injectable FastAPI dependency, so tests pin
+  the clock instead of depending on the day they run.
 - Keep each diff reviewable; don't touch files outside the plan.
 
 ## Final report (≤ 12 lines)

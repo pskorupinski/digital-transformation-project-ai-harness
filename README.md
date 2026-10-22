@@ -55,6 +55,9 @@ claude                              # then: /03-features once the brief has cont
 
 Recommended VS Code extensions (prompted on open): Mermaid preview, Ruff, Oxc.
 
+**First run in a new fork:** start `claude` interactively once and accept the workspace trust
+prompt — until then Claude Code ignores the project's `.claude/settings.json` (permissions and hooks).
+
 ## Sizing
 
 The four skills are sized for an MVP-scale project with a reasonably familiar domain. For vaguer

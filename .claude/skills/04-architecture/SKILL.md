@@ -68,4 +68,6 @@ Keep the header blockquote, then exactly these sections:
 ## Chat summary (≤ 10 lines)
 
 Entities and flows produced · proposed decisions (by ID, one line each) · assumptions added ·
-the 2–3 things most worth the human's review. Then stop — do not write specs or code.
+the 2–3 things most worth the human's review · **suggested first slice**: the in-scope feature
+that exercises the most of the architecture (data model, API, UI, ideally one integration) with
+the least scope, and why. Then stop — do not write specs or code.
