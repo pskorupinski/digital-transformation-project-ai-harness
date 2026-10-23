@@ -22,7 +22,7 @@ Arguments: $ARGUMENTS
 - **Reviewed docs committed:** `git status --porcelain -- docs decisions.md` must be empty, so
   your checkpoint commits contain code only. If it isn't, stop before planning, list the files
   and ask the human to commit them (suggest `git add docs/ decisions.md && git commit -m
-  "Human: …"`). Never commit the human's docs yourself.
+  "docs(<area>): …"`). Never commit the human's docs yourself.
 
 ## Step 0 — Plan, then STOP
 
@@ -45,27 +45,27 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
    scenario named `test_s01_<slug>`, docstring `F-nn/S-01 <title>`. Use the `client`/`db`
    fixtures; arrange data through the API where it exists, else through the `db` session.
    Run `docker compose exec backend pytest -q` — confirm they fail for the expected reason.
-   Commit `F-nn: tests (red)`.
+   Commit `test(F-nn): add scenario tests (red)`.
 2. **Data.** SQLAlchemy 2.0 typed models per the data model; import them in
    `app/models/__init__.py`. Generate the migration
    (`docker compose exec backend alembic revision --autogenerate -m "F-nn <slug>"`), **show its
    operations and flag any drop, rename or type change**, then `alembic upgrade head`.
-   Commit `F-nn: data model`.
+   Commit `feat(F-nn): add data model and migration`.
 3. **Capabilities** (only if the slice touches a register row with v0 = `fake`): port
    (`Protocol`) named after the capability, not a vendor; fake adapter mirroring the contract
    shape; factory by `INTEGRATIONS_MODE`. Async callbacks via a mock-provider route scheduling
    a `BackgroundTask` that calls our **real** inbound route over HTTP. Inbound handlers are
    idempotent.
 4. **API.** Pydantic schemas, service functions (own the transaction), thin router registered
-   in `app/api/__init__.py`. Run backend tests → **green**. Commit `F-nn: API (green)`.
+   in `app/api/__init__.py`. Run backend tests → **green**. Commit `feat(F-nn): add <resource> API`.
 5. **Thin UI.** Plain semantic HTML components for the `@ui` scenario's flow, calling
    `src/api/client.ts`; theme tokens only, no styling work. Test the `@ui` scenario with vitest
    + Testing Library (`it('F-nn/S-nn …')`, fetch stubbed). `npm run typecheck` and `npm test` green.
-   Add the planned seed data to `app/seed.py` and run it. Commit `F-nn: UI`.
+   Add the planned seed data to `app/seed.py` and run it. Commit `feat(F-nn): add <page> page`.
 6. **Close.** Set the feature's `Status` to `built` in `docs/02-features.md`, then run all suites
    — `tests/test_traceability.py` now checks every scenario of this feature has its test.
    If the implementation changed anything in `03-architecture.md`, update it and say so.
-   Commit `F-nn: close` — these doc edits are yours (status, architecture sync), so they belong
+   Commit `docs(F-nn): mark built and sync architecture` — these doc edits are yours (status, architecture sync), so they belong
    in your commit; flag any architecture change in the report for the human to review.
 
 ## Rules

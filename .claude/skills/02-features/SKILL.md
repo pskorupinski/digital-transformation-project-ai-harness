@@ -116,7 +116,7 @@ Status values: `proposed → specified → built` (later steps update it).
   approval):
 
   ```bash
-  git add docs/ && git commit -m "Human: confirm features and v0 scope"
+  git add docs/ && git commit -m "docs(features): confirm v0 scope"
   ```
 
 Then stop — do not start architecture.

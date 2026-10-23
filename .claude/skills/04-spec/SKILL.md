@@ -71,7 +71,7 @@ Then set the feature's `Status` in `docs/02-features.md` to `specified`.
   approval):
 
   ```bash
-  git add docs/ && git commit -m "Human: accept spec F-nn"
+  git add docs/ && git commit -m "docs(spec): accept F-nn scenarios"
   ```
 
 Then stop — no code.

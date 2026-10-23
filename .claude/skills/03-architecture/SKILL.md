@@ -103,7 +103,7 @@ list and code block so Markdown renders them.
   approval):
 
   ```bash
-  git add docs/ decisions.md && git commit -m "Human: accept architecture and decisions"
+  git add docs/ decisions.md && git commit -m "docs(architecture): accept architecture and <D-nn range>"
   ```
 
 Then stop — do not write specs or code.
