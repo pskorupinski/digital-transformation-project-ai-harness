@@ -21,6 +21,9 @@ services:
 
   backend:
     build: ./backend
+    env_file:
+      - path: .env          # AI_MODE, ANTHROPIC_API_KEY, AI_MODEL, <CAPABILITY>_MODE
+        required: false
     environment:
       DATABASE_URL: postgresql+psycopg://app:app@db:5432/app
       TEST_DATABASE_URL: postgresql+psycopg://app:app@db:5432/app_test

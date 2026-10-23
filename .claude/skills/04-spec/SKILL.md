@@ -42,6 +42,24 @@ In this order, skipping what doesn't apply:
 - Anything the brief doesn't settle → append `A-nn` to brief §11 (`Raised by: 04-spec`) and
   write the scenario on that assumption, citing it in a comment.
 
+## AI features (D-05)
+
+Scenarios specify the behaviour **around** the model, with a given model response — never what
+a real model would write (that is not deterministic, so it can't be a test):
+
+- `Given the assistant suggests "<value>"` — the model's answer is a precondition, not an outcome
+- Cover, in this order: the suggestion shown for a human decision → the human accepts or edits
+  → the model is unavailable or returns nothing usable, and the flow still completes without it
+  → nothing acts on a suggestion before the human decides
+- Output **quality** goes in the eval plan, not in scenarios. Append to the `.feature` file:
+
+  ```gherkin
+  # Eval plan (evals/cases/f_nn_<slug>.jsonl, threshold 80%):
+  # - typical: <input> → <expected>
+  # - ambiguous: <input> → <expected, e.g. no suggestion>
+  # - should decline: <input with no basis> → <expected>
+  ```
+
 ## Output format
 
 ```gherkin

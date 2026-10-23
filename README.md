@@ -59,10 +59,22 @@ judges whether today's system fits a web solution and proposes to keep, replace,
 it manual. Capabilities sit behind ports, so v0 can run on fakes while the vendor decision is
 made separately before v1 (D-01).
 
+## AI features
+
+AI features are built like any other capability, with three additions (D-05):
+
+| Concern | Answer in the harness |
+|---|---|
+| Defining behaviour first | Scenarios specify what happens *around* the model (suggest → human decides → fallback); output quality becomes an eval plan |
+| Measuring quality | `backend/evals/`: golden cases, objective checks, pass-rate threshold, run against the real model |
+| Safety and auditability | Validated structured output only, minimised input, a human decision before anything acts, an audit record per generation |
+
+Tests always use a deterministic fake, so the suite and the hooks never call a model.
+
 ## Quick start
 
 ```bash
-cp .env.example .env
+cp .env.example .env              # add ANTHROPIC_API_KEY + AI_MODE=real for AI features
 docker compose up --build -d
 open http://localhost:5173          # walking skeleton: shows backend + DB health
 claude                              # then: /02-features once the brief has content

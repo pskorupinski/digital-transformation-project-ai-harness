@@ -33,6 +33,7 @@ Present, in ≤ 25 lines:
 
 - Files to create / change, per layer (models, schemas, services, api, integrations, UI)
 - Expected migration: tables / columns / constraints
+- AI slices: output schema, prompt file, fallback on `GenerationError`, audit fields, eval cases
 - Seed data needed to try the slice by hand (added to `app/seed.py`, idempotent), or "none"
 - Deviations from `03-architecture.md` (each → a `proposed` row in `decisions.md`), or "none"
 - Open questions, if any
@@ -53,15 +54,27 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
    Commit `feat(F-nn): add data model and migration`.
 3. **Capabilities** (only if the slice touches a register row with v0 = `fake`): port
    (`Protocol`) named after the capability, not a vendor; fake adapter mirroring the contract
-   shape; factory by `INTEGRATIONS_MODE`. Async callbacks via a mock-provider route scheduling
+   shape; factory by `settings.mode_for("<capability>")`. Async callbacks via a mock-provider route scheduling
    a `BackgroundTask` that calls our **real** inbound route over HTTP. Inbound handlers are
    idempotent.
+
+   **AI** (capability `ai`, D-05): don't write a new port — use `app/integrations/ai.py`. Add the
+   Pydantic output schema, the prompt file `app/prompts/f_nn_<slug>.v1.md`, and a service that
+   builds the minimised input, calls `get_generation().generate(...)`, stores the audit fields
+   from `Generation`, and handles `GenerationError` with the planned fallback. In tests,
+   override `get_generation` with a `FakeStructuredGenerationAdapter` that has the scenario's
+   response (or error) registered.
 4. **API.** Pydantic schemas, service functions (own the transaction), thin router registered
    in `app/api/__init__.py`. Run backend tests → **green**. Commit `feat(F-nn): add <resource> API`.
 5. **Thin UI.** Plain semantic HTML components for the `@ui` scenario's flow, calling
    `src/api/client.ts`; theme tokens only, no styling work. Test the `@ui` scenario with vitest
    + Testing Library (`it('F-nn/S-nn …')`, fetch stubbed). `npm run typecheck` and `npm test` green.
    Add the planned seed data to `app/seed.py` and run it. Commit `feat(F-nn): add <page> page`.
+   **AI eval set** (AI slices only): write `evals/cases/f_nn_<slug>.jsonl` from the spec's eval
+   plan (5–10 cases) and `evals/test_eval_f_nn_<slug>.py` with one objective check per case and
+   `assert_pass_rate(..., 0.8)`. Run it if `AI_MODE=real` and a key are set and report the
+   score; otherwise say it is ready to run. Don't tune the prompt to the cases silently — report
+   failures and propose a `v2` prompt.
 6. **Close.** Set the feature's `Status` to `built` in `docs/02-features.md`, then run all suites
    — `tests/test_traceability.py` now checks every scenario of this feature has its test.
    If the implementation changed anything in `03-architecture.md`, update it and say so.
@@ -89,5 +102,6 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
   ```bash
   docker compose exec backend pytest -v -k "f_nn"     # this slice's scenarios, by name
   docker compose exec frontend npm test               # UI scenario
+  docker compose exec backend pytest evals -s         # AI slices: model quality vs threshold
   docker compose logs -f backend                      # watch requests while trying it
   ```

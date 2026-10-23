@@ -52,8 +52,8 @@ Every generated artifact cites its sources with these IDs. Missing information b
 1. **Stay in scope.** Build only features whose scope has no `?`. Never invent business facts.
 2. **Architecture is a contract.** Follow `docs/03-architecture.md` and accepted decisions.
    If reality disagrees, stop and propose a change (a `proposed` row in `decisions.md`).
-3. **No new dependencies without asking.** Pre-approved: `react-router` (when a slice needs a
-   second page).
+3. **No new dependencies without asking.** Already installed: `anthropic` (AI capability).
+   Pre-approved: `react-router` (when a slice needs a second page).
 4. **Tests come from scenarios (D-04).** One test per Gherkin scenario, named `test_s01_<slug>`
    (backend) or `it('F-01/S-01 …')` (frontend). `tests/test_traceability.py` enforces it.
 5. **Small steps, visible checkpoints.** Present the plan before coding. Commit code at each
@@ -77,7 +77,7 @@ The scope is the traceability ID (`F-01`) for feature work, or the doc's area ot
 | Moment | Who | Message |
 |---|---|---|
 | Features reviewed | human | `docs(features): confirm v0 scope` |
-| Architecture reviewed | human | `docs(architecture): accept architecture and D-05–D-08` |
+| Architecture reviewed | human | `docs(architecture): accept architecture and D-06–D-08` |
 | Spec reviewed | human | `docs(spec): accept F-01 scenarios` |
 | Build: tests written | Claude | `test(F-01): add scenario tests (red)` |
 | Build: data layer | Claude | `feat(F-01): add data model and migration` |
@@ -102,7 +102,9 @@ Who approved is recorded by the commit's author, not in the message.
 | `backend/app/schemas/` | API contracts, separate from the ORM on purpose |
 | `backend/app/services/` | Business logic; owns transactions |
 | `backend/app/api/` | Thin routers calling services |
-| `backend/app/integrations/` | Capability ports, fake adapters, `mock_providers.py` |
+| `backend/app/integrations/` | Capability ports, fake adapters, `mock_providers.py`, `ai.py` |
+| `backend/app/prompts/` | Versioned prompts `f_nn_<slug>.v<n>.md` — never edit a released version |
+| `backend/evals/` | AI quality evals: golden cases + checks + pass-rate threshold (real model) |
 | `frontend/src/api/client.ts` | The only way the UI calls the API (relative `/api` path) |
 
 The backend container mounts the repo read-only at `/repo` so the traceability test can read
@@ -112,9 +114,22 @@ The backend container mounts the repo read-only at `/repo` so the traceability t
 
 For each register row with v0 = `fake`: a `Protocol` port named after the capability (not a
 vendor) that services depend on, a `Fake…Adapter` mirroring the contract shape, and a factory
-choosing by `INTEGRATIONS_MODE`. If the real system calls back asynchronously, the fake
+choosing by `settings.mode_for("<capability>")` — `INTEGRATIONS_MODE` is the default,
+`<CAPABILITY>_MODE` overrides it per capability (e.g. real AI while payments stay fake). If the real system calls back asynchronously, the fake
 simulates it: a mock-provider route schedules a `BackgroundTask` that sends the event over
 HTTP to **our real inbound route**.
+
+## AI capability (D-05)
+
+| Rule | How |
+|---|---|
+| One port for all AI features | `app/integrations/ai.py`: `get_generation().generate(prompt=…, input=…, schema=…)` returns a validated Pydantic object, or raises `GenerationError` |
+| Tests never call a model | Override `get_generation` with `FakeStructuredGenerationAdapter`, registering the scenario's response or error |
+| Quality is measured, not asserted | Evals in `backend/evals/` call the real model and score golden cases against a threshold |
+| Humans decide | AI output is a suggestion with a state (`suggested → accepted / edited / rejected`); nothing acts on it before a person does |
+| Every generation is explainable | Store model, prompt version, input reference, output, decision, who, when |
+| Minimise input | Send only what the prompt needs — never contact or payment data |
+| Fail soft | On `GenerationError` the flow completes without AI |
 
 ## Commands
 
@@ -124,6 +139,7 @@ docker compose exec backend pytest                             # backend tests +
 docker compose exec backend alembic revision --autogenerate -m "<msg>"
 docker compose exec backend alembic upgrade head
 docker compose exec backend python -m app.seed                # demo data, idempotent
+docker compose exec backend pytest evals -s                    # AI evals (AI_MODE=real + key)
 docker compose exec frontend npm test                          # frontend tests
 docker compose exec frontend npm run typecheck
 docker compose logs -f backend                                 # debug
