@@ -29,6 +29,7 @@ Present, in ≤ 25 lines:
 
 - Files to create / change, per layer (models, schemas, services, api, integrations, UI)
 - Expected migration: tables / columns / constraints
+- Seed data needed to try the slice by hand (added to `app/seed.py`, idempotent), or "none"
 - Deviations from `03-architecture.md` (each → a `proposed` row in `decisions.md`), or "none"
 - Open questions, if any
 
@@ -56,7 +57,7 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
 5. **Thin UI.** Plain semantic HTML components for the `@ui` scenario's flow, calling
    `src/api/client.ts`; theme tokens only, no styling work. Test the `@ui` scenario with vitest
    + Testing Library (`it('F-nn/S-nn …')`, fetch stubbed). `npm run typecheck` and `npm test` green.
-   Commit `F-nn: UI`.
+   Add the planned seed data to `app/seed.py` and run it. Commit `F-nn: UI`.
 6. **Close.** Set the feature's `Status` to `built` in `docs/02-features.md`, then run all suites
    — `tests/test_traceability.py` now checks every scenario of this feature has its test.
    If the implementation changed anything in `03-architecture.md`, update it and say so.

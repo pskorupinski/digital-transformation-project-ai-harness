@@ -102,6 +102,7 @@ docker compose up --build -d                                   # start everythin
 docker compose exec backend pytest                             # backend tests + traceability
 docker compose exec backend alembic revision --autogenerate -m "<msg>"
 docker compose exec backend alembic upgrade head
+docker compose exec backend python -m app.seed                # demo data, idempotent
 docker compose exec frontend npm test                          # frontend tests
 docker compose exec frontend npm run typecheck
 docker compose logs -f backend                                 # debug
