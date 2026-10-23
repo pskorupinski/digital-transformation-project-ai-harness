@@ -1,7 +1,7 @@
 /*
  * Brand tokens — the ONLY place brand appears.
- * Values come from docs/01-brief.md §4.1 Brand. Until then: neutral defaults
- * (logged as an assumption in brief §10). Components use the tokens, never raw colours.
+ * Values come from docs/01-brief.md §5 Brand. Until then: neutral defaults
+ * (logged as an assumption in brief §11). Components use the tokens, never raw colours.
  */
 :root {
   --brand-name: 'Client';

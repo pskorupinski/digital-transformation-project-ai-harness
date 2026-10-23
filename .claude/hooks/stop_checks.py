@@ -1,7 +1,8 @@
 """Stop: before Claude declares a turn done, run the test suites of the areas it changed.
 
 Red tests → exit 2 → Claude is sent back to fix them (once; stop_hook_active prevents loops).
-Only uncommitted changes count, so doc-only turns cost nothing."""
+Only uncommitted changes count. Doc changes run the backend suite too, because it contains
+the traceability test (D-04)."""
 
 import subprocess
 
@@ -12,7 +13,7 @@ if event.get("stop_hook_active"):
     raise SystemExit(0)
 
 changed = subprocess.run(
-    ["git", "status", "--porcelain", "--", "backend", "frontend"],
+    ["git", "status", "--porcelain", "--", "backend", "frontend", "docs"],
     cwd=ROOT,
     capture_output=True,
     text=True,
@@ -21,7 +22,7 @@ areas = {line[3:].split("/")[0] for line in changed if line[3:]}
 services = running_services()
 failures = []
 
-if "backend" in areas:
+if areas & {"backend", "docs"}:
     outcome = run("backend", ["pytest", "-q", "-x"], ["uv", "run"], services)
     if outcome and outcome[0] != 0:
         failures.append(("backend: pytest", outcome[1]))

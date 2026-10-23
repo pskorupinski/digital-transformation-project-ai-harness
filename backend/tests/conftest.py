@@ -2,7 +2,7 @@
 transaction per test (fast, isolated).
 
 Test naming: one test per Gherkin scenario, e.g. test_s01_<scenario_slug>, whose
-docstring names the scenario ID and its .feature file in docs/05-specs/.
+docstring names the scenario ID and its .feature file in docs/04-specs/.
 """
 
 import os

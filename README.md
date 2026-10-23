@@ -22,11 +22,10 @@ owning discovery and every decision.
 
 ```mermaid
 flowchart LR
-    B["01 Brief<br/>human"] --> I["02 Integrations<br/>human"]
-    I --> F["03 Features<br/>/03-features"]
-    F --> A["04 Architecture<br/>/04-architecture"]
-    A --> S["05 Spec<br/>/05-spec F-nn"]
-    S --> C["06 Build slice<br/>/06-build-slice F-nn"]
+    B["01 Brief<br/>human"] --> F["02 Features<br/>/02-features"]
+    F --> A["03 Architecture<br/>/03-architecture"]
+    A --> S["04 Spec<br/>/04-spec F-nn"]
+    S --> C["05 Build slice<br/>/05-build-slice F-nn"]
     C -. next slice .-> S
     D[("decisions.md")] -.- A
     D -.- C
@@ -34,15 +33,31 @@ flowchart LR
 
 | Step | What happens | Review point |
 |---|---|---|
-| 01 Brief | Discovery interview, notes typed live into 10 sections | — |
-| 02 Integrations | Register of external systems: real, fake or out of scope | — |
-| 03 Features | Job stories, Kano classification, AI opportunities, proposed scope, cut list | Validate must-bes with the business; remove the `?` |
-| 04 Architecture | Context, data model, key flows, API surface, scalability notes | Review diagrams; accept/reject proposed decisions |
-| 05 Spec | 4–6 Gherkin scenarios for one feature | Edit scenarios — they become the tests |
-| 06 Build slice | Plan → tests → data → API → thin UI, committed at each green checkpoint | Approve the plan; review migration and diffs |
+| 01 Brief | Discovery interview in business language, typed live into 11 sections | — |
+| 02 Features | Job stories, Kano classification, AI opportunities, proposed scope, cut list | Validate must-bes with the business; remove the `?` |
+| 03 Architecture | Context, capability register, data model, key flows, API surface, scalability notes | Review diagrams; accept or reject proposed decisions |
+| 04 Spec | 4–6 Gherkin scenarios for one feature | Edit scenarios — they become the tests |
+| 05 Build slice | Plan → tests → data → API → thin UI, committed at each green checkpoint | Approve the plan; review the migration and diffs |
 
 Numbers follow the process; each skill carries the number of the document it produces.
-Steps 01–02 have no skill on purpose: discovery is a conversation between people.
+Step 01 has no skill on purpose: discovery is a conversation between people.
+
+## Scope levels
+
+| Scope | Meaning |
+|---|---|
+| `v0` | First working build, to validate with the business — capabilities may be fake |
+| `v1` | First release to real customers — every capability real |
+| `v2` | Next iteration after launch |
+| `cut` | Not building, with the reason recorded |
+
+## External capabilities
+
+The business describes what it uses today in plain words (brief §8). Architecture turns that
+into a **capability register**: for each capability (taking payment, sending messages, …) it
+judges whether today's system fits a web solution and proposes to keep, replace, add or leave
+it manual. Capabilities sit behind ports, so v0 can run on fakes while the vendor decision is
+made separately before v1 (D-01).
 
 ## Quick start
 
@@ -50,10 +65,10 @@ Steps 01–02 have no skill on purpose: discovery is a conversation between peop
 cp .env.example .env
 docker compose up --build -d
 open http://localhost:5173          # walking skeleton: shows backend + DB health
-claude                              # then: /03-features once the brief has content
+claude                              # then: /02-features once the brief has content
 ```
 
-Recommended VS Code extensions (prompted on open): Mermaid preview, Ruff, Oxc.
+Recommended VS Code extensions (prompted on open): Mermaid preview, Cucumber (Gherkin), Ruff, Oxc.
 
 **First run in a new fork:** start `claude` interactively once and accept the workspace trust
 prompt — until then Claude Code ignores the project's `.claude/settings.json` (permissions and hooks).
@@ -61,17 +76,17 @@ prompt — until then Claude Code ignores the project's `.claude/settings.json` 
 ## Sizing
 
 The four skills are sized for an MVP-scale project with a reasonably familiar domain. For vaguer
-domains, split them further: discovery synthesis, user journeys, domain model and NFRs as
-separate steps — the numbering scheme leaves room.
+domains, split them further — discovery synthesis, user journeys, domain model and
+non-functional requirements as separate steps. The numbering scheme leaves room.
 
 ## Layout
 
-```
-CLAUDE.md          how we work: process, IDs, guardrails, stack
-decisions.md       why: ADR-lite decision log (D-nn)
-docs/              what: 01-brief → 05-specs
-.claude/skills/    03-features · 04-architecture · 05-spec · 06-build-slice
-.claude/hooks/     post-edit lint/format · pre-stop tests
-backend/           FastAPI · SQLAlchemy · Alembic · pytest
-frontend/          React · Vite · TypeScript · vitest
-```
+| Path | Holds |
+|---|---|
+| `CLAUDE.md` | How we work: process, scope levels, IDs, guardrails, stack |
+| `decisions.md` | Why: ADR-lite decision log (`D-nn`) |
+| `docs/` | What: `01-brief` → `04-specs` |
+| `.claude/skills/` | `02-features`, `03-architecture`, `04-spec`, `05-build-slice` |
+| `.claude/hooks/` | Lint/format after each edit; tests before a turn ends |
+| `backend/` | FastAPI, SQLAlchemy, Alembic, pytest |
+| `frontend/` | React, Vite, TypeScript, vitest |

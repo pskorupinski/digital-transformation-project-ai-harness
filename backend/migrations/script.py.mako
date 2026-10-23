@@ -5,7 +5,7 @@ Revises: ${down_revision | comma,n}
 Create Date: ${create_date}
 
 REVIEW BEFORE APPLYING: autogenerate reads a rename as drop + add (data loss) and can miss
-server defaults and enum changes. Check every op below against docs/04-architecture.md.
+server defaults and enum changes. Check every op below against docs/03-architecture.md.
 """
 from collections.abc import Sequence
 

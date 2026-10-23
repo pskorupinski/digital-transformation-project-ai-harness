@@ -25,10 +25,12 @@ services:
       DATABASE_URL: postgresql+psycopg://app:app@db:5432/app
       TEST_DATABASE_URL: postgresql+psycopg://app:app@db:5432/app_test
       INTEGRATIONS_MODE: ${INTEGRATIONS_MODE:-fake}
+      REPO_ROOT: /repo
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
+      - .:/repo:ro   # docs/ + frontend tests, read by tests/test_traceability.py
     depends_on:
       db:
         condition: service_healthy

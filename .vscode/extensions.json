@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "bierner.markdown-mermaid",
+    "CucumberOpen.cucumber-official",
     "charliermarsh.ruff",
     "ms-python.python",
     "oxc.oxc-vscode"
