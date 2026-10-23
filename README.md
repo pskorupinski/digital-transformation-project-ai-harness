@@ -6,6 +6,17 @@ owning discovery and every decision.
 
 **Use:** "Use this template" on GitHub → one repo per client project.
 
+## Framework, not a solution
+
+A fresh fork contains **no domain**: no entities, no endpoints, no features, and every document
+under `docs/` is an empty template. What it does contain are the engineering decisions that
+are the same for every project — made once, upfront, so that project time goes into the
+client's problem rather than into setup.
+
+Upfront does not mean immutable: each decision is an accepted row in `decisions.md` with a
+"revisit when" trigger, and a project changes it the same way it records any other decision.
+The full inventory is in [What a fresh fork contains](#what-a-fresh-fork-contains).
+
 ## Why a harness, not just prompts
 
 - **The repo is the single source of truth.** Brief, features, diagrams, specs and decisions
@@ -51,25 +62,34 @@ Step 01 has no skill on purpose: discovery is a conversation between people.
 | `v2` | Next iteration after launch |
 | `cut` | Not building, with the reason recorded |
 
-## External capabilities
+## What a fresh fork contains
+
+| Area | Decided upfront | Left to the project | Where |
+|---|---|---|---|
+| Process | Five steps, each ending at a human review; numbered docs and skills; scope levels `v0`–`v2`; the reviewer's commit is the approval | The content of every document | `CLAUDE.md`, `docs/`, `.claude/skills/` |
+| Traceability | IDs for brief sections, assumptions, features, capabilities, scenarios and decisions; uncited content becomes an explicit assumption | — | `CLAUDE.md` |
+| Stack (D-02) | React + Vite, FastAPI, SQLAlchemy 2.0 + Alembic, PostgreSQL 17, docker-compose with hot reload | Data model, endpoints, pages | `backend/`, `frontend/` |
+| Walking skeleton | Frontend → API → database wired, health-checked and tested; layered backend (models, schemas, services, routers); idempotent seed script | Everything the features need | `backend/app/`, `frontend/src/` |
+| Testing (D-03, D-04) | Gherkin scenarios map 1:1 to tests; a traceability test enforces it; backend tests run on real Postgres, one rolled-back transaction each | The scenarios | `docs/04-specs/`, `backend/tests/` |
+| Quality gates | Lint and format after every AI edit; tests before the AI may finish a turn; the AI can commit but never push | — | `.claude/hooks/`, `.claude/settings.json` |
+| External capabilities (D-01) | Capabilities behind ports named after the capability; in-process fakes that mirror async callbacks; real or fake chosen per capability | Which capabilities are needed, keep/replace/add, vendors | `backend/app/integrations/` |
+| AI capability (D-05) | One structured-generation port (validated output or an explicit error); deterministic fake for tests; versioned prompts; golden-case evals with a pass-rate threshold; human decision and audit record per generation | Whether a feature uses AI; its prompt, schema, eval cases and threshold | `backend/app/integrations/ai.py`, `backend/app/prompts/`, `backend/evals/` |
+| Real-time | Polling by default; Server-Sent Events for streams; WebSocket only when interaction is bidirectional | Whether any feature needs it | `.claude/skills/03-architecture/` |
+| Conventions | Conventional Commits; Markdown that renders; brand only as theme tokens | Brand values (brief §5) | `CLAUDE.md`, `frontend/src/theme.css` |
+
+### How external capabilities work
 
 The business describes what it uses today in plain words (brief §8). Architecture turns that
 into a **capability register**: for each capability (taking payment, sending messages, …) it
 judges whether today's system fits a web solution and proposes to keep, replace, add or leave
-it manual. Capabilities sit behind ports, so v0 can run on fakes while the vendor decision is
-made separately before v1 (D-01).
+it manual. Because services depend on the port, `v0` runs on fakes while the vendor decision
+is made separately before `v1`.
 
-## AI features
+### How AI features work
 
-AI features are built like any other capability, with three additions (D-05):
-
-| Concern | Answer in the harness |
-|---|---|
-| Defining behaviour first | Scenarios specify what happens *around* the model (suggest → human decides → fallback); output quality becomes an eval plan |
-| Measuring quality | `backend/evals/`: golden cases, objective checks, pass-rate threshold, run against the real model |
-| Safety and auditability | Validated structured output only, minimised input, a human decision before anything acts, an audit record per generation |
-
-Tests always use a deterministic fake, so the suite and the hooks never call a model.
+Scenarios specify the behaviour *around* the model — suggestion shown, human accepts or edits,
+fallback when the model fails — and run against the fake, so tests stay deterministic and the
+hooks never call a model. Output quality is measured separately by evals against the real model.
 
 ## Quick start
 
@@ -90,15 +110,3 @@ prompt — until then Claude Code ignores the project's `.claude/settings.json` 
 The four skills are sized for an MVP-scale project with a reasonably familiar domain. For vaguer
 domains, split them further — discovery synthesis, user journeys, domain model and
 non-functional requirements as separate steps. The numbering scheme leaves room.
-
-## Layout
-
-| Path | Holds |
-|---|---|
-| `CLAUDE.md` | How we work: process, scope levels, IDs, guardrails, stack |
-| `decisions.md` | Why: ADR-lite decision log (`D-nn`) |
-| `docs/` | What: `01-brief` → `04-specs` |
-| `.claude/skills/` | `02-features`, `03-architecture`, `04-spec`, `05-build-slice` |
-| `.claude/hooks/` | Lint/format after each edit; tests before a turn ends |
-| `backend/` | FastAPI, SQLAlchemy, Alembic, pytest |
-| `frontend/` | React, Vite, TypeScript, vitest |
