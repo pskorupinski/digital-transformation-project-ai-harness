@@ -112,5 +112,11 @@ Status values: `proposed → specified → built` (later steps update it).
 - Assumptions added to §11
 - If more than 6 features are `v0?`: say so and name the ones that could merge or wait — a
   smaller v0 keeps the architecture reviewable
+- The commit the human makes once the review is done (don't run it — committing is their
+  approval):
+
+  ```bash
+  git add docs/ && git commit -m "Human: confirm features and v0 scope"
+  ```
 
 Then stop — do not start architecture.

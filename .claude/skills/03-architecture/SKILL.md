@@ -99,5 +99,11 @@ list and code block so Markdown renders them.
 - The 2–3 things most worth the human's review
 - **Suggested first slice:** the in-scope feature that exercises the most of the architecture
   (data model, API, UI, ideally one capability) with the least scope, and why
+- The commit the human makes once the review is done (don't run it — committing is their
+  approval):
+
+  ```bash
+  git add docs/ decisions.md && git commit -m "Human: accept architecture and decisions"
+  ```
 
 Then stop — do not write specs or code.

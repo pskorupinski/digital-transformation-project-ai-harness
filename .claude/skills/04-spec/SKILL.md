@@ -64,5 +64,14 @@ Then set the feature's `Status` in `docs/02-features.md` to `specified`.
 
 ## Chat summary
 
-One line per scenario (`S-01 @api — title`), assumptions added, and any gap found in the
-architecture (as a question for the human, not a fix). Then stop — no code.
+- One line per scenario (`S-01 @api — title`)
+- Assumptions added
+- Any gap found in the architecture (as a question for the human, not a fix)
+- The commit the human makes once the review is done (don't run it — committing is their
+  approval):
+
+  ```bash
+  git add docs/ && git commit -m "Human: accept spec F-nn"
+  ```
+
+Then stop — no code.

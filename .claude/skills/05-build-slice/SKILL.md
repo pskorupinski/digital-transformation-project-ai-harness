@@ -19,6 +19,10 @@ Arguments: $ARGUMENTS
   (which capabilities are `fake` in v0, and their contract shape)
 - `docs/02-features.md`, `decisions.md`, `CLAUDE.md` (guardrails, stack, commands)
 - Containers running: `docker compose ps`; if not, `docker compose up --build -d`.
+- **Reviewed docs committed:** `git status --porcelain -- docs decisions.md` must be empty, so
+  your checkpoint commits contain code only. If it isn't, stop before planning, list the files
+  and ask the human to commit them (suggest `git add docs/ decisions.md && git commit -m
+  "Human: …"`). Never commit the human's docs yourself.
 
 ## Step 0 — Plan, then STOP
 
@@ -61,6 +65,8 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
 6. **Close.** Set the feature's `Status` to `built` in `docs/02-features.md`, then run all suites
    — `tests/test_traceability.py` now checks every scenario of this feature has its test.
    If the implementation changed anything in `03-architecture.md`, update it and say so.
+   Commit `F-nn: close` — these doc edits are yours (status, architecture sync), so they belong
+   in your commit; flag any architecture change in the report for the human to review.
 
 ## Rules
 
@@ -78,3 +84,10 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
 - How to try it (URL + steps)
 - Deviations and proposed decisions
 - What the next slice would be
+- Commands for the human to verify independently:
+
+  ```bash
+  docker compose exec backend pytest -v -k "f_nn"     # this slice's scenarios, by name
+  docker compose exec frontend npm test               # UI scenario
+  docker compose logs -f backend                      # watch requests while trying it
+  ```
