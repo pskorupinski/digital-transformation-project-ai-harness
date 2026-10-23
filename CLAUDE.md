@@ -73,7 +73,7 @@ Every generated artifact cites its sources with these IDs. Missing information b
 |---|---|
 | `backend/` | FastAPI, SQLAlchemy 2.0 typed models, Pydantic, Alembic, pytest, ruff |
 | `frontend/` | React, Vite, TypeScript, vitest + Testing Library, oxlint |
-| `docker-compose.yml` | Postgres 16 (`app`, `app_test`), backend :8000, frontend :5173 |
+| `docker-compose.yml` | Postgres 17 (`app`, `app_test`), backend :8000, frontend :5173 |
 
 | Folder | Holds |
 |---|---|

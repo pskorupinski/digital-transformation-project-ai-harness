@@ -3,7 +3,7 @@
 #   docker compose down -v           → also wipes the database volume
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_USER: app
       POSTGRES_PASSWORD: app
