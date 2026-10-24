@@ -22,7 +22,7 @@
 <!-- What makes this business unique? What must survive in every touchpoint? -->
 
 ## 5. Brand
-<!-- Name · primary colour (hex) · accent colour (hex) · tone of voice in one line -->
+<!-- Name · primary colour · accent colour (hex if known, else describe it: it becomes an assumption) · logo file? · tone of voice in one line -->
 
 ## 6. Offering
 <!-- What is sold / delivered: catalogue size, variants, customisation, pricing model, made-to-order vs stock -->

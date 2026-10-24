@@ -75,7 +75,8 @@ Step 01 has no skill on purpose: discovery is a conversation between people.
 | External capabilities (D-01) | Capabilities behind ports named after the capability; in-process fakes that mirror async callbacks; real or fake chosen per capability | Which capabilities are needed, keep/replace/add, vendors | `backend/app/integrations/` |
 | AI capability (D-05) | One structured-generation port (validated output or an explicit error); deterministic fake for tests; versioned prompts; golden-case evals with a pass-rate threshold; human decision and audit record per generation | Whether a feature uses AI; its prompt, schema, eval cases and threshold | `backend/app/integrations/ai.py`, `backend/app/prompts/`, `backend/evals/` |
 | Real-time | Polling by default; Server-Sent Events for streams; WebSocket only when interaction is bidirectional | Whether any feature needs it | `.claude/skills/03-architecture/` |
-| Conventions | Conventional Commits; Markdown that renders; brand only as theme tokens | Brand values (brief §5) | `CLAUDE.md`, `frontend/src/theme.css` |
+| Look and feel | Generic stylesheet for semantic HTML; page frame with the brand name top left; brand only as 4 colour tokens + name, with WCAG AA contrast | Brand values (brief §5) | `frontend/src/base.css`, `theme.css`, `brand.ts`, `components/Layout.tsx` |
+| Conventions | Conventional Commits; Markdown that renders | — | `CLAUDE.md` |
 
 ### How external capabilities work
 

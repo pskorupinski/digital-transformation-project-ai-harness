@@ -1,51 +1,44 @@
 /*
- * Brand tokens — the ONLY place brand appears.
- * Values come from docs/01-brief.md §5 Brand. Until then: neutral defaults
- * (logged as an assumption in brief §11). Components use the tokens, never raw colours.
+ * Brand tokens: the ONLY place brand colours appear (guardrail 7).
+ * Values come from docs/01-brief.md §5, applied by /05-build-slice on the first slice with UI.
+ * Until then: neutral defaults. The brand name lives in src/brand.ts, not here.
+ * Only edit the "Brand" block; everything else derives from it.
  */
 :root {
-  --brand-name: 'Client';
-  --brand-primary: #1f2933;
-  --brand-accent: #2563eb;
-  --brand-on-primary: #ffffff;
+  /* Brand: 4 values. Text on each colour must reach WCAG AA contrast (4.5:1). */
+  --brand-primary: #1f2933;     /* header, headings, links */
+  --brand-on-primary: #ffffff;  /* text on primary */
+  --brand-accent: #2563eb;      /* buttons, logo mark, highlights */
+  --brand-on-accent: #ffffff;   /* text on accent */
 
-  --color-bg: #ffffff;
-  --color-surface: #f5f6f8;
-  --color-text: #1f2933;
-  --color-muted: #6b7280;
-  --color-border: #e5e7eb;
-  --color-danger: #b91c1c;
-  --color-success: #15803d;
+  /* Derived from the brand: don't edit per project */
+  --brand-primary-soft: color-mix(in srgb, var(--brand-primary) 7%, #ffffff);
+  --brand-accent-soft: color-mix(in srgb, var(--brand-accent) 14%, #ffffff);
 
-  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --radius: 6px;
+  /* Neutrals and feedback */
+  --color-bg: #fbfbfa;
+  --color-surface: #ffffff;
+  --color-text: #1f2328;
+  --color-muted: #5f6670;
+  --color-border: #e3e5e8;
+  --color-danger: #b42318;
+  --color-danger-soft: #fef3f2;
+  --color-success: #067647;
+  --color-success-soft: #ecfdf3;
+
+  /* Type */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-size: 1rem;
+  --line-height: 1.55;
+
+  /* Space and shape */
   --space: 8px;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  color: var(--color-text);
-  background: var(--color-bg);
-}
-
-button {
-  font: inherit;
-  padding: var(--space) calc(var(--space) * 2);
-  border: none;
-  border-radius: var(--radius);
-  background: var(--brand-accent);
-  color: var(--brand-on-primary);
-  cursor: pointer;
-}
-
-button:disabled { opacity: 0.5; cursor: default; }
-
-input, select, textarea {
-  font: inherit;
-  padding: var(--space);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  --space-2: calc(var(--space) * 2);
+  --space-3: calc(var(--space) * 3);
+  --space-4: calc(var(--space) * 4);
+  --space-6: calc(var(--space) * 6);
+  --content-width: 72rem;
+  --radius: 10px;
+  --radius-small: 6px;
+  --shadow: 0 1px 2px rgb(16 24 40 / 6%), 0 4px 12px rgb(16 24 40 / 6%);
 }

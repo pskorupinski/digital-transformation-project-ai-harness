@@ -1,0 +1,515 @@
+/*
+ * Base styles for plain semantic HTML: write <header>, <nav>, <main>, <article>, <form>,
+ * <table>… and the page looks finished without per-component styling (guardrail 7).
+ * Tokens only (src/theme.css), never raw colours. Generic across projects: don't edit per client.
+ *
+ * Layout helpers (the only classes):
+ *   .cards  responsive grid of <article> cards (on a <div> or <ul>)
+ *   .stack  vertical rhythm between children
+ *   .muted  secondary text
+ */
+
+/* ---------- Reset ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- Page frame: header · main · footer (see components/Layout.tsx) ---------- */
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#root > header,
+#root > main,
+#root > footer {
+  /* Centred content without wrapper elements */
+  padding-inline: max(var(--space-2), (100% - var(--content-width)) / 2);
+}
+
+#root > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
+}
+
+/* Brand: the first link in the header, top left */
+#root > header > a:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Logo mark when no logo file is set (src/brand.ts) */
+#root > header > a:first-child::before {
+  content: '';
+  width: 0.95em;
+  height: 0.95em;
+  border-radius: 50%;
+  background: var(--brand-accent);
+  box-shadow: 0 0 0 0.2em color-mix(in srgb, var(--brand-accent) 35%, transparent);
+}
+
+#root > header > a:first-child:has(img)::before {
+  display: none;
+}
+
+#root > header > a:first-child img {
+  height: 2rem;
+  width: auto;
+}
+
+#root > header nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#root > header nav a {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+#root > header nav a:hover,
+#root > header nav a[aria-current='page'] {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 0.35em;
+}
+
+#root > main {
+  flex: 1;
+  padding-block: var(--space-4) var(--space-6);
+}
+
+#root > footer {
+  padding-block: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+/* ---------- Text ---------- */
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 var(--space);
+  line-height: 1.2;
+  color: var(--brand-primary);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.4rem);
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  margin-top: var(--space-4);
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+}
+
+h1 + p {
+  margin-top: 0;
+  font-size: 1.1rem;
+  color: var(--color-muted);
+}
+
+p,
+ul,
+ol,
+dl,
+table,
+figure,
+blockquote {
+  margin: 0 0 var(--space-2);
+}
+
+a {
+  color: var(--brand-primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  /* Primary, not accent: a light accent can't reach 3:1 against the page */
+  outline: 3px solid var(--brand-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-small);
+}
+
+#root > header :focus-visible {
+  outline-color: var(--brand-on-primary);
+}
+
+small,
+.muted {
+  color: var(--color-muted);
+}
+
+.muted {
+  font-size: 0.925rem;
+}
+
+hr {
+  margin: var(--space-4) 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Highlight pill: "3 seats left", "Sold out", "Led by Jordi" */
+mark {
+  display: inline-block;
+  padding: 0.1em 0.6em;
+  border-radius: 999px;
+  background: var(--brand-accent-soft);
+  color: var(--color-text);
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+/* Key-value details: <dl><dt>Dates</dt><dd>2–14 Oct</dd>… */
+dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: calc(var(--space) * 0.75) var(--space-3);
+}
+
+dt {
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+dd {
+  margin: 0;
+}
+
+/* ---------- Cards: <article> ---------- */
+
+article {
+  --card-pad: var(--space-3);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  padding: var(--card-pad);
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+article > * {
+  margin: 0;
+}
+
+/* A first image or figure bleeds to the card edges */
+article > img:first-child,
+article > figure:first-child {
+  width: calc(100% + 2 * var(--card-pad));
+  max-width: none;
+  margin: calc(-1 * var(--card-pad)) calc(-1 * var(--card-pad)) var(--space);
+}
+
+article > img:first-child {
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+article > figure:first-child img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+/* Push a final button or action row to the bottom of equal-height cards */
+article > :last-child:is(a, button, footer, form) {
+  margin-top: auto;
+}
+
+/* ---------- Layout helpers ---------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-3);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.cards > li {
+  display: flex;
+}
+
+.cards > li > article {
+  flex: 1;
+}
+
+.stack > * {
+  margin-block: 0;
+}
+
+.stack > * + * {
+  margin-top: var(--space-2);
+}
+
+/* ---------- Buttons ---------- */
+
+button,
+a[role='button'],
+input[type='submit'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.65em 1.25em;
+  border: 1px solid transparent;
+  border-radius: var(--radius-small);
+  background: var(--brand-accent);
+  color: var(--brand-on-accent);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* Hover lifts instead of recolouring: a darker or lighter accent could break text contrast */
+button:hover,
+a[role='button']:hover,
+input[type='submit']:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+button:active,
+a[role='button']:active,
+input[type='submit']:active {
+  box-shadow: none;
+  transform: none;
+}
+
+/* Secondary action: <button type="button" data-variant="secondary"> */
+[data-variant='secondary'] {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+[data-variant='secondary']:hover {
+  background: var(--brand-primary-soft);
+}
+
+button:disabled,
+input[type='submit']:disabled {
+  opacity: 0.5;
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* ---------- Forms ---------- */
+
+form {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 36rem;
+}
+
+form > button,
+form > input[type='submit'] {
+  justify-self: start;
+}
+
+label {
+  display: grid;
+  gap: calc(var(--space) * 0.5);
+  font-weight: 600;
+}
+
+label:has(> input[type='checkbox'], > input[type='radio']) {
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+  font-weight: 400;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.6em 0.75em;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 400;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  width: auto;
+  accent-color: var(--brand-accent);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--brand-primary);
+  outline: 3px solid var(--brand-accent-soft);
+  outline-offset: 0;
+}
+
+[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+fieldset {
+  display: grid;
+  gap: var(--space);
+  margin: 0;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+}
+
+legend {
+  padding-inline: 0.4em;
+  font-weight: 600;
+}
+
+/* ---------- Tables ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  padding: 0.65em 0.9em;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+caption {
+  padding-bottom: var(--space);
+  text-align: left;
+  font-weight: 600;
+}
+
+/* ---------- Feedback: role="status" (success / info) and role="alert" (error) ---------- */
+
+main [role='status'],
+main [role='alert'] {
+  padding: var(--space-2);
+  border-radius: var(--radius-small);
+  border-left: 4px solid var(--color-success);
+  background: var(--color-success-soft);
+}
+
+main [role='alert'] {
+  border-left-color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 40rem) {
+  #root > main {
+    padding-block: var(--space-3) var(--space-4);
+  }
+
+  th,
+  td {
+    padding: 0.5em 0.6em;
+    overflow-wrap: anywhere;
+  }
+
+  dl {
+    grid-template-columns: 1fr;
+  }
+
+  dd + dt {
+    margin-top: var(--space);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

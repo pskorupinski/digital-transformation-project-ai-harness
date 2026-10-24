@@ -37,6 +37,8 @@ Present, in ≤ 25 lines:
 - Seed data needed to try the slice by hand (added to `app/seed.py`, idempotent), or "none"
 - Deviations from `03-architecture.md` (each → a `proposed` row in `decisions.md`), or "none"
 - Deferred: fields or tables the architecture has for `Out of scope` features, or "none"
+- Brand (first slice with UI, while `src/brand.ts` still says `'Client'`): name and the 4 colour
+  tokens from brief §5, as hex, each text/background pair with its contrast ratio — or "already applied"
 - Open questions, if any
 
 End with: **"Reply `go`, or adjust the plan."** Do not write code before the human answers.
@@ -67,8 +69,16 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
    response (or error) registered.
 4. **API.** Pydantic schemas, service functions (own the transaction), thin router registered
    in `app/api/__init__.py`. Run backend tests → **green**. Commit `feat(F-nn): add <resource> API`.
-5. **Thin UI.** Plain semantic HTML components for the `@ui` scenario's flow, calling
-   `src/api/client.ts`; theme tokens only, no styling work. Test the `@ui` scenario with vitest
+5. **Thin UI.** Plain semantic HTML components for the `@ui` scenario's flow, inside
+   `components/Layout.tsx` (brand header, `main`, footer), calling `src/api/client.ts`.
+   `src/base.css` styles the elements — `article` is a card, `mark` a highlight pill,
+   `role="status"`/`role="alert"` a notice, `a role="button"` a button-link; helpers `.cards`,
+   `.stack`, `.muted`; `data-variant="secondary"` for a secondary button. No inline styles,
+   no new CSS files, no raw colours.
+   **Brand** (as planned): set `src/brand.ts` and the *Brand* block of `src/theme.css` from §5.
+   A colour given only in words → choose a hex, log `A-nn` in §11 (`Raised by: 05-build-slice`).
+   Pick each `--brand-on-*` so text reaches 4.5:1 — on light accents that means dark text.
+   No logo file in the repo → leave `logo: null`. Test the `@ui` scenario with vitest
    + Testing Library (`it('F-nn/S-nn …')`, fetch stubbed). `npm run typecheck` and `npm test` green.
    Add the planned seed data to `app/seed.py` and run it. Commit `feat(F-nn): add <page> page`.
    **AI eval set** (AI slices only): write `evals/cases/f_nn_<slug>.jsonl` from the spec's eval
