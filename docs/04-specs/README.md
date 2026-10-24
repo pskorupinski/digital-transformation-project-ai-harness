@@ -14,3 +14,4 @@ fails if a `built` feature has a scenario without its test.
 | Tags | `@F-nn` on the feature; `@api` or `@ui` on each scenario (the level its test lives at) |
 | Size | 4–6 scenarios per slice: happy path first, then the validations and failures that matter |
 | Language | Concrete example data, business terms; no endpoints, tables or CSS |
+| Boundary | One feature's job story only; behaviour other features own is listed as `# Out of scope: F-nn` in the header |
