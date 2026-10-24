@@ -20,6 +20,18 @@ Arguments: $ARGUMENTS
 - `docs/01-brief.md` — business rules and domain language.
 - `docs/04-specs/README.md` — conventions.
 
+## Scope boundary
+
+Scenarios cover **only this feature's job story**. Before choosing scenarios, check
+`docs/02-features.md`: behaviour another feature owns (languages, payments, notifications,
+returning-client recognition…) is **out of this spec**, even if the brief states it as a
+general rule or the architecture already designs for it.
+
+- Behaviour this feature needs but doesn't own → a `Given` precondition, not a scenario
+  (`Given the departure "Japan in autumn" is published`).
+- List what you excluded in the header: `# Out of scope: F-06 (languages)`.
+- A rule from the brief that no feature owns → an `A-nn` in §11, not a silent scenario.
+
 ## Choosing scenarios (default 5, range 4–6, or the number given)
 
 In this order, skipping what doesn't apply:
@@ -67,6 +79,7 @@ a real model would write (that is not deterministic, so it can't be a test):
 Feature: F-nn <feature name>
   When …, I want to …, so I can …
   # Sources: §n · Entities: <names> · Capabilities: I-nn · Assumptions: A-nn
+  # Out of scope: F-nn (<reason>)
 
   Background:
     Given …
@@ -83,6 +96,7 @@ Then set the feature's `Status` in `docs/02-features.md` to `specified`.
 ## Chat summary
 
 - One line per scenario (`S-01 @api — title`)
+- Excluded features (`Out of scope`) — ask the human to confirm the boundary
 - Assumptions added
 - Any gap found in the architecture (as a question for the human, not a fix)
 - The commit the human makes once the review is done (don't run it — committing is their

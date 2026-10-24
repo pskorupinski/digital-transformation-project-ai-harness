@@ -36,6 +36,7 @@ Present, in ≤ 25 lines:
 - AI slices: output schema, prompt file, fallback on `GenerationError`, audit fields, eval cases
 - Seed data needed to try the slice by hand (added to `app/seed.py`, idempotent), or "none"
 - Deviations from `03-architecture.md` (each → a `proposed` row in `decisions.md`), or "none"
+- Deferred: fields or tables the architecture has for `Out of scope` features, or "none"
 - Open questions, if any
 
 End with: **"Reply `go`, or adjust the plan."** Do not write code before the human answers.
@@ -86,6 +87,9 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
 - **Never weaken a test to make it pass.** If a scenario looks wrong or ambiguous, stop and ask —
   the spec is the contract.
 - If a step grows beyond the plan (new entity, new endpoint, new dependency), stop and re-plan.
+- Build only what the scenarios require. Features under `Out of scope` in the spec header are
+  not built, even if `03-architecture.md` designs for them — list any fields or tables you defer
+  in the plan, so the human sees the gap.
 - Only pre-approved dependencies (see `CLAUDE.md`); anything else → ask.
 - Time-dependent rules read "now/today" from an injectable FastAPI dependency, so tests pin
   the clock instead of depending on the day they run.
