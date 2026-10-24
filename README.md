@@ -45,7 +45,7 @@ flowchart LR
 | Step | What happens | Review point |
 |---|---|---|
 | 01 Brief | Discovery interview in business language, typed live into 11 sections | — |
-| 02 Features | Job stories, Kano classification, AI opportunities, proposed scope, cut list | Validate must-bes with the business; remove the `?` |
+| 02 Features | Blocking assumptions with scope branches, job stories, Kano classification, AI opportunities, proposed scope, cut list | Ask the blocking questions and validate must-bes with the business; apply answers with `/02-features A-nn <answer>`; remove the `?` |
 | 03 Architecture | Context, capability register, data model, key flows, API surface, scalability notes | Review diagrams; accept or reject proposed decisions |
 | 04 Spec | 4–6 Gherkin scenarios for one feature | Edit scenarios — they become the tests |
 | 05 Build slice | Plan → tests → data → API → thin UI, committed at each green checkpoint | Approve the plan; review the migration and diffs |
