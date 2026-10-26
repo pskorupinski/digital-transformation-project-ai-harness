@@ -33,7 +33,7 @@ working.
 | Proposal | `keep & integrate`, `replace`, `add new`, `keep manual`, `out of scope` |
 | v0 | How the first build provides it: `fake`, `real`, `manual`, `none` |
 | v1 | What the first customer release needs: `real`, `manual`, `none` |
-| Contract shape | The *generic* pattern of the capability, e.g. "hosted checkout + async confirmation callback" |
+| Contract shape | The *generic* pattern of the capability, e.g. "hosted checkout + async confirmation callback". Name any **user-facing step** at the external system (hosted payment page, consent or signing screen): the v0 fake will serve a stand-in page for it |
 
 Rules:
 
@@ -82,6 +82,9 @@ Rules:
   cardinalities like `Parent ||--o{ Child : has`.
 - `sequenceDiagram`: alias long names (`participant API as Backend API`); mark fakes `(fake in v0)`.
 - ≤ 15 nodes per diagram. Prefer two clear diagrams over one dense one.
+- **External systems are drawn as external**, by the capability they provide and labelled
+  `(fake in v0)` when v0 = `fake` — e.g. `pay["Payment provider<br/>(fake in v0)"]`. Never draw
+  fake adapters or mock-provider routes: they are how v0 implements the fake, not architecture.
 
 ## Output — `docs/03-architecture.md`
 
@@ -89,15 +92,23 @@ Keep the header blockquote, then exactly these sections. Leave a blank line befo
 list and code block so Markdown renders them.
 
 1. `## Scope` — the in-scope `F-nn` list (one line each) and what is explicitly **not** covered.
-2. `## Context` — C4 level 1 `flowchart LR`: actors → system → external capabilities
-   (`I-nn`, v0 mode).
+2. `## Context` — C4 level 1 `flowchart LR`: actors → system → external systems
+   (`I-nn`, v0 mode). Also draw every interaction an actor has **directly** with an external
+   system — e.g. Customer → Payment provider "pays on the hosted page".
 3. `## Capability register` —
    `| ID | Capability | Needed by | As-is (§8) | Fit | Proposal | v0 | v1 | Contract shape | Refs |`
-4. `## Containers` — C4 level 2 `flowchart LR`: SPA (React) → API (FastAPI) → PostgreSQL,
-   capability ports with fake adapters, mock-provider routes; protocols on the arrows.
+4. `## Containers` — C4 level 2 `flowchart LR`: SPA (React) → API (FastAPI) → PostgreSQL, and
+   API → each external system, labelled with the port and protocol (`Payments port, HTTPS`);
+   callbacks as arrows from the external system to the API (`signed webhook`); the browser's
+   hops to external systems too. Protocols on all arrows. One line under the diagram: "In v0,
+   systems marked *fake* run as in-process fake adapters plus mock-provider routes (D-01)."
 5. `## Data model` — `erDiagram`, then `| Entity | Purpose | Status values | Features |`.
 6. `## Key flows` — one `sequenceDiagram` per in-scope feature that crosses a boundary (external
    capability, async callback, multi-step state change); at most 3. Skip the obvious CRUD.
+   When a capability has a user-facing step, show **both channels**: the browser's redirect to
+   the external system and back, and the server-to-server callback. Below the diagram, state
+   that the callback — never the redirect — confirms the outcome, and what happens when the
+   callback arrives twice or never (e.g. hold expires → status check → release).
 7. `## AI design` — only if in-scope features are AI-tagged; one table per feature:
 
    | Aspect | Decision |

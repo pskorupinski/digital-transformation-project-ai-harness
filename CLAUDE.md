@@ -122,7 +122,10 @@ vendor) that services depend on, a `Fake…Adapter` mirroring the contract shape
 choosing by `settings.mode_for("<capability>")` — `INTEGRATIONS_MODE` is the default,
 `<CAPABILITY>_MODE` overrides it per capability (e.g. real AI while payments stay fake). If the real system calls back asynchronously, the fake
 simulates it: a mock-provider route schedules a `BackgroundTask` that sends the event over
-HTTP to **our real inbound route**.
+HTTP to **our real inbound route**. If the real system has a user-facing step (hosted payment
+page, consent screen), a mock-provider route also serves a plain stand-in page with one button
+per outcome; each button triggers the callback (or none) and redirects back to our return URL.
+Diagrams show the external system marked `(fake in v0)`, never the mock routes.
 
 ## AI capability (D-05)
 

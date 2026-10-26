@@ -86,6 +86,11 @@ judges whether today's system fits a web solution and proposes to keep, replace,
 it manual. Because services depend on the port, `v0` runs on fakes while the vendor decision
 is made separately before `v1`.
 
+The fakes keep the real shape of the integration: an asynchronous callback arrives over HTTP at
+our real inbound route, and a user-facing step (such as a hosted payment page) becomes a plain
+stand-in page with one button per outcome — so success, failure and a callback that never
+arrives can all be tried by hand.
+
 ### How AI features work
 
 Scenarios specify the behaviour *around* the model — suggestion shown, human accepts or edits,

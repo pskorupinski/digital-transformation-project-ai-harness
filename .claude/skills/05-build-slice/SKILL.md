@@ -61,6 +61,19 @@ End with: **"Reply `go`, or adjust the plan."** Do not write code before the hum
    a `BackgroundTask` that calls our **real** inbound route over HTTP. Inbound handlers are
    idempotent.
 
+   **User-facing step** (the register's contract shape names one, e.g. a hosted payment page):
+   the fake adapter returns a **relative** URL to a stand-in page in `app/integrations/mock_providers.py`,
+   so the browser stays on the Vite proxy:
+   - `GET /api/mock-providers/<capability>/<step>/{id}` (the router adds `/mock-providers`, the
+     app `/api`) → `HTMLResponse`: plain, unstyled HTML (it plays someone else's page, not ours)
+     with one button per outcome the spec covers, e.g. pay, decline, abandon.
+   - Each button is an **empty** `<form method="post" action="/api/mock-providers/…/{id}/<outcome>">`
+     — the outcome is in the path, so no form fields (`python-multipart` is not installed).
+   - The POST route schedules the callback `BackgroundTask` (none for *abandon*) and returns
+     `RedirectResponse(<relative return URL>, status_code=303)`.
+   - Scenario tests keep calling our inbound route directly; the page is for trying the flow by
+     hand and for demos.
+
    **AI** (capability `ai`, D-05): don't write a new port — use `app/integrations/ai.py`. Add the
    Pydantic output schema, the prompt file `app/prompts/f_nn_<slug>.v1.md`, and a service that
    builds the minimised input, calls `get_generation().generate(...)`, stores the audit fields
