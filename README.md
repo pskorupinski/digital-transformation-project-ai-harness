@@ -106,7 +106,9 @@ open http://localhost:5173          # walking skeleton: shows backend + DB healt
 claude                              # then: /02-features once the brief has content
 ```
 
-Recommended VS Code extensions (prompted on open): Mermaid preview, Cucumber (Gherkin), Ruff, Oxc.
+Recommended VS Code extensions (prompted on open): Cucumber (Gherkin), Ruff, Python, Oxc.
+Mermaid preview is built into VS Code 1.121+ — don't also install *Markdown Preview Mermaid
+Support*: two renderers make diagrams flash and disappear. On older versions, install it instead.
 
 **First run in a new fork:** start `claude` interactively once and accept the workspace trust
 prompt — until then Claude Code ignores the project's `.claude/settings.json` (permissions and hooks).
